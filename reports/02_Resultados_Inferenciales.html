@@ -9,9 +9,9 @@
 <meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
 
-<meta name="author" content="Víctor - Proyecto Fásmidos 2026" />
+<meta name="author" content="Víctor Bustos - Proyecto Fásmidos 2026" />
 
-<meta name="date" content="2026-03-21" />
+<meta name="date" content="2026-03-29" />
 
 <title>Inferencia Causal y Análisis Morfométrico en Dyme ramulus</title>
 
@@ -1493,63 +1493,84 @@ border-radius: 0px;
 
 <h1 class="title toc-ignore">Inferencia Causal y Análisis Morfométrico
 en Dyme ramulus</h1>
-<h4 class="author">Víctor - Proyecto Fásmidos 2026</h4>
-<h4 class="date">2026-03-21</h4>
+<h4 class="author">Víctor Bustos - Proyecto Fásmidos 2026</h4>
+<h4 class="date">2026-03-29</h4>
 
 </div>
 
 
-<div id="marco-epistemológico-más-allá-del-valor-p" class="section level1" number="1">
-<h1><span class="header-section-number">1</span> 1. Marco
-Epistemológico: Más allá del Valor <em>p</em></h1>
-<p>El presente análisis rechaza el uso mecánico de pruebas de
-significancia en favor de un enfoque estructural causal, fundamentado en
-los principios de McElreath (2018). Los modelos estadísticos presentados
-a continuación no buscan ser meras asociaciones espurias, sino
-representaciones matemáticas de un mecanismo generador de datos.</p>
-<p>Postulamos que la inversión materna (reflejada en la morfología
-tridimensional del huevo) actúa como un filtro físico estricto para la
-viabilidad temprana (eclosión), pero que su relevancia decae
-drásticamente en etapas ontogenéticas posteriores, donde variables
-exógenas no medidas asumen el control de la supervivencia.</p>
+<div id="marco-teórico-modelos-como-representaciones-biológicas" class="section level1" number="1">
+<h1><span class="header-section-number">1</span> Marco Teórico: Modelos
+como Representaciones Biológicas</h1>
+<p>El presente análisis adopta un enfoque estructural causal,
+fundamentado en los principios de Richard McElreath (2018). En la
+investigación ecológica tradicional, existe la tendencia a depender
+excesivamente del valor <em>p</em> (NHST) para declarar si un hallazgo
+es “significativo”. Sin embargo, McElreath nos advierte que los modelos
+estadísticos son “gólems” ciegos: ejecutan cálculos, pero no entienden
+la biología subyacente.</p>
+<p>Bajo este marco, no buscamos meras asociaciones estadísticas.
+Nuestros modelos intentan representar matemáticamente el mecanismo que
+genera la supervivencia. Postulamos una hipótesis clara: <strong>la
+inversión materna (el tamaño y forma del huevo) actúa como una barrera
+física estricta para nacer (eclosión), pero su importancia decae
+drásticamente una vez que el individuo entra en las etapas
+ninfales</strong>, donde factores externos (disponibilidad de alimento,
+clima) toman el control de su supervivencia.</p>
 <hr />
 </div>
-<div id="análisis-estadístico-la-perspectiva-del-matemático" class="section level1" number="2">
-<h1><span class="header-section-number">2</span> 2. Análisis
-Estadístico: La Perspectiva del Matemático</h1>
-<p>Para el análisis formal, evitamos los supuestos paramétricos
-tradicionales debido a la naturaleza física de los datos biológicos. Las
-dimensiones corporales presentan límites inferiores duros (asimetría
-positiva), lo cual invalida el uso del Teorema del Límite Central para
-muestras desbalanceadas (<span class="math inline">\(n_{fallo} =
-285\)</span>, <span class="math inline">\(n_{exito} = 53\)</span>).</p>
-<div id="inferencia-bivariada-y-tamaños-de-efecto" class="section level2" number="2.1">
-<h2><span class="header-section-number">2.1</span> 2.1. Inferencia
-Bivariada y Tamaños de Efecto</h2>
-<p>Utilizamos la prueba de Mann-Whitney U, derivando el tamaño de efecto
-<span class="math inline">\(r\)</span> (correlación biserial de rangos)
-para cuantificar la magnitud del desplazamiento estocástico entre
-grupos.</p>
-<pre class="r"><code># Carga de datos
-df &lt;- readRDS(&quot;../data/processed/fasmidos_clean.rds&quot;) %&gt;% 
+<div id="primera-etapa-el-filtro-de-la-eclosión" class="section level1" number="2">
+<h1><span class="header-section-number">2</span> Primera Etapa: El
+Filtro de la Eclosión</h1>
+<p>Nuestra primera gran pregunta es binaria: ¿qué medidas anatómicas
+separan a los individuos que logran nacer de los que mueren dentro del
+huevo? Dado que la gran mayoría de los especímenes no logró eclosionar
+(285 fallos frente a 53 éxitos), nuestros datos no forman una curva de
+campana perfecta (distribución normal). Por tanto, utilizar promedios
+simples o pruebas paramétricas clásicas (como ANOVA o T-Student)
+arrojaría resultados engañosos.</p>
+<div id="inferencia-bivariada-mann-whitney-u" class="section level2" number="2.1">
+<h2><span class="header-section-number">2.1</span> Inferencia Bivariada
+(Mann-Whitney U)</h2>
+<p>Para abordar este desbalance, empleamos la prueba de
+<strong>Mann-Whitney U</strong> (o Wilcoxon de suma de rangos). Esta
+prueba no paramétrica es ideal porque no compara promedios, sino
+“rangos”. Es decir, evalúa la probabilidad de que, si tomamos al azar un
+huevo que eclosionó y uno que falló, el exitoso sea físicamente más
+grande. Además, calculamos el <strong>tamaño de efecto (<span class="math inline">\(r\)</span>)</strong>, una métrica vital que nos
+indica la <em>fuerza</em> real de esta diferencia, más allá de que sea
+estadísticamente significativa.</p>
+<pre class="r"><code># Carga de datos estructurados
+df &lt;- readRDS(&quot;../data/processed/fasmidos_clean.rds&quot;) |&gt; 
   mutate(eclosion_bin = ifelse(estado == &quot;No eclosionó&quot;, 0, 1),
          estado_ord = factor(estado, levels = c(&quot;No eclosionó&quot;, &quot;Eclosionó&quot;, &quot;Adulto&quot;), ordered = TRUE))
 
 N &lt;- nrow(df)
-# Ejecución interna de Wilcoxon para Ancho
+# Ejecución de la prueba para la variable Ancho
 w_ancho &lt;- wilcox.test(ancho ~ eclosion_bin, data = df, exact = FALSE)
 r_ancho &lt;- qnorm(w_ancho$p.value / 2, lower.tail = FALSE) / sqrt(N)</code></pre>
-<p>Los resultados confirman que el <code>ancho</code> (<span class="math inline">\(W = 4480.5, p &lt; 0.001, r = 0.256\)</span>) y la
-<code>altura</code> (<span class="math inline">\(W = 3938.0, p &lt;
-0.001, r = 0.301\)</span>) presentan efectos estocásticos relevantes. La
-<code>longitud</code> es ruido estadístico (<span class="math inline">\(p = 0.249, r = 0.063\)</span>).</p>
+<p>Los resultados confirman que tanto el <strong>ancho</strong> (<span class="math inline">\(W = 4480.5, p &lt; 0.001, r = 0.256\)</span>) como
+la <strong>altura</strong> (<span class="math inline">\(W = 3938.0, p
+&lt; 0.001, r = 0.301\)</span>) presentan efectos relevantes en la
+supervivencia inicial. Sin embargo, la <strong>longitud</strong>
+demostró ser estadísticamente irrelevante (<span class="math inline">\(p
+= 0.249, r = 0.063\)</span>). En términos biológicos, a la naturaleza no
+le importa qué tan largo sea el huevo; la restricción mecánica para
+romper el corion se encuentra en la sección transversal.</p>
 </div>
-<div id="regresión-logística-multivariada-y-colinealidad" class="section level2" number="2.2">
-<h2><span class="header-section-number">2.2</span> 2.2. Regresión
-Logística Multivariada y Colinealidad</h2>
-<p>Un análisis bivariado no distingue si <code>ancho</code> y
-<code>altura</code> miden el mismo fenómeno biológico. Se ajustó un
-modelo Logit multivariado para evaluar la contribución marginal.</p>
+<div id="aislamiento-de-variables-regresión-logística-multivariada" class="section level2" number="2.2">
+<h2><span class="header-section-number">2.2</span> Aislamiento de
+Variables (Regresión Logística Multivariada)</h2>
+<p>La prueba anterior nos dijo que el ancho y la altura son importantes,
+pero surge un problema: un huevo más ancho suele ser también más alto.
+¿Ambas medidas nos dicen lo mismo (redundancia) o aportan ventajas
+separadas?</p>
+<p>Para desenredar esto, construimos un <strong>Modelo de Regresión
+Logística Multivariada</strong>. Este modelo enfrenta a las tres medidas
+al mismo tiempo para predecir un resultado binario (Éxito = 1, Fallo =
+0). Además, calculamos el <strong>Factor de Inflación de la Varianza
+(VIF)</strong>, que actúa como un detector de redundancia: si el VIF es
+bajo, significa que las medidas aportan información única.</p>
 <pre class="r"><code>mod_log &lt;- glm(eclosion_bin ~ altura + ancho + longitud, family = binomial, data = df)
 tidy(mod_log)</code></pre>
 <pre><code>## # A tibble: 4 × 5
@@ -1562,29 +1583,37 @@ tidy(mod_log)</code></pre>
 <pre class="r"><code>vif(mod_log)</code></pre>
 <pre><code>##   altura    ancho longitud 
 ## 1.358790 1.364454 1.071504</code></pre>
-<p><strong>Interpretación Matemática:</strong> Tanto el ancho (<span class="math inline">\(\beta = 7.51, p = 0.008\)</span>) como la altura
-(<span class="math inline">\(\beta = 5.48, p = 0.011\)</span>)
-sobreviven a la estratificación cruzada. El Factor de Inflación de la
-Varianza (VIF <span class="math inline">\(&lt; 1.4\)</span>) descarta
-multicolinealidad severa. Esto demuestra ortogonalidad parcial: ambas
-variables exigen dimensiones mínimas independientes para la probabilidad
-de éxito. El coeficiente de <code>longitud</code> (<span class="math inline">\(\beta = -0.08\)</span>) colapsa hacia cero,
-confirmando su nula capacidad predictiva.</p>
+<p><strong>Interpretación Funcional:</strong> El modelo revela que tanto
+el ancho (<span class="math inline">\(\beta = 7.51, p = 0.008\)</span>)
+como la altura (<span class="math inline">\(\beta = 5.48, p =
+0.011\)</span>) mantienen su importancia predictiva incluso cuando se
+evalúan juntas. El bajo valor del VIF (<span class="math inline">\(&lt;
+1.4\)</span>) confirma que no hay redundancia severa. Esto significa que
+<strong>ambas dimensiones operan como requisitos
+independientes</strong>: para que un huevo tenga altas probabilidades de
+eclosionar, necesita tener un volumen transversal mínimo tanto en el eje
+del ancho como en el de la altura. Nuevamente, la longitud colapsa hacia
+cero en el modelo, confirmando su nula utilidad predictiva.</p>
 <hr />
 </div>
 </div>
-<div id="ontogenia-y-cuellos-de-botella-la-perspectiva-del-biólogo" class="section level1" number="3">
-<h1><span class="header-section-number">3</span> 3. Ontogenia y Cuellos
-de Botella: La Perspectiva del Biólogo</h1>
-<p>Desde la biología evolutiva, el tamaño del huevo representa el
-presupuesto energético inicial y las restricciones espaciales del
-embrión. ¿Es este tamaño un determinante para llegar a la adultez o solo
-para nacer?</p>
-<div id="regresión-ordinal-logística-proporcional" class="section level2" number="3.1">
-<h2><span class="header-section-number">3.1</span> 3.1. Regresión
-Ordinal (Logística Proporcional)</h2>
-<p>Asumimos un modelo de momios proporcionales donde el desarrollo es un
-continuo estricto: <em>Fallo Embrionario <span class="math inline">\(\rightarrow\)</span> Eclosión <span class="math inline">\(\rightarrow\)</span> Adulto</em>.</p>
+<div id="segunda-etapa-la-ontogenia-completa" class="section level1" number="3">
+<h1><span class="header-section-number">3</span> Segunda Etapa: La
+Ontogenia Completa</h1>
+<p>Una vez demostrado qué se necesita para nacer, la biología evolutiva
+nos exige mirar el ciclo completo:</p>
+<p>Fallo Embrionario <span class="math inline">\(\rightarrow\)</span>
+Supervivencia Ninfal (<code>Eclosionó</code>) <span class="math inline">\(\rightarrow\)</span> Éxito Total
+(<code>Adulto</code>).</p>
+<div id="el-impulso-físico-inicial-regresión-ordinal" class="section level2" number="3.1">
+<h2><span class="header-section-number">3.1</span> El Impulso Físico
+Inicial (Regresión Ordinal)</h2>
+<p>Utilizamos un modelo de <strong>Regresión Ordinal (Logística
+Proporcional)</strong>. A diferencia del modelo binario anterior, este
+asume que el desarrollo del insecto es una secuencia de umbrales.
+Evaluamos si incrementar un milímetro en la morfología transversal
+aumenta la probabilidad de empujar al individuo a superar la siguiente
+etapa de vida.</p>
 <pre class="r"><code>mod_ord &lt;- polr(estado_ord ~ altura + ancho + longitud, data = df, Hess = TRUE)
 res_ord &lt;- coef(summary(mod_ord))
 p_valores &lt;- pnorm(abs(res_ord[, &quot;t value&quot;]), lower.tail = FALSE) * 2
@@ -1596,32 +1625,43 @@ cbind(res_ord, &quot;p value&quot; = round(p_valores, 4))</code></pre>
 ## No eclosionó|Eclosionó 26.2093949   5.048867 5.19114361  0.0000
 ## Eclosionó|Adulto       27.5394275   5.081716 5.41931666  0.0000</code></pre>
 <p><strong>Interpretación Biológica:</strong> Los coeficientes
-fuertemente positivos indican que la sección transversal incrementa la
-probabilidad de cruzar los umbrales ontogenéticos. Un huevo más ancho y
-alto facilita la ruptura mecánica del corion.</p>
+fuertemente positivos en ancho y altura indican que, matemáticamente,
+una mayor sección transversal facilita el cruce de los umbrales de vida.
+Proporciona el espacio y, presumiblemente, las reservas energéticas
+necesarias para superar las fases más críticas del desarrollo
+temprano.</p>
 </div>
-<div id="el-decaimiento-del-poder-causal-epsilon-cuadrado" class="section level2" number="3.2">
-<h2><span class="header-section-number">3.2</span> 3.2. El Decaimiento
-del Poder Causal (Epsilon Cuadrado)</h2>
-<p>Aquí reside la conclusión biológica central. Si evaluamos la varianza
-total explicada en los tres estados mediante Kruskal-Wallis:</p>
+<div id="el-peaje-ontogenético-varianza-explicada-mediante-kruskal-wallis" class="section level2" number="3.2">
+<h2><span class="header-section-number">3.2</span> El Peaje Ontogenético
+(Varianza Explicada mediante Kruskal-Wallis)</h2>
+<p>Aquí consolidamos nuestra hipótesis inicial. Utilizamos la prueba de
+<strong>Kruskal-Wallis</strong> para comparar los tres grupos
+simultáneamente, pero nuestra atención no está en el valor <em>p</em>,
+sino en el <strong>Epsilon Cuadrado (<span class="math inline">\(\varepsilon^2\)</span>)</strong>. Esta métrica nos
+dice qué porcentaje de toda la varianza en la supervivencia es explicada
+estrictamente por el tamaño del huevo.</p>
 <pre class="r"><code>k_ancho &lt;- kruskal.test(ancho ~ estado, data = df)
 eps2_ancho &lt;- k_ancho$statistic / (N - 1)
 eps2_ancho</code></pre>
 <pre><code>## Kruskal-Wallis chi-squared 
 ##                 0.08612279</code></pre>
-<p>El tamaño del efecto <span class="math inline">\(\varepsilon^2\)</span> para el ancho es <span class="math inline">\(0.086\)</span> (explicando apenas el <span class="math inline">\(8.6\%\)</span> de la varianza estructural) y <span class="math inline">\(0.131\)</span> para la altura.</p>
-<p><strong>Conclusión Causal:</strong> Siguiendo los principios de
-McElreath, la baja varianza explicada <span class="math inline">\(\varepsilon^2\)</span> no es un fracaso del
-modelo, sino una revelación biológica. La morfología transversal es un
-<strong>peaje ontogenético</strong> (un filtro de umbral), no un seguro
-de vida. Define exclusivamente quién tiene la biometría física para
-eclosionar. Una vez que la ninfa nace, su probabilidad de alcanzar la
-etapa <code>Adulto</code> se desvincula del tamaño de su huevo y pasa a
-estar dominada por variables ambientales (disponibilidad trófica,
-humedad, interacciones ecológicas). La longitud del huevo, en contraste,
-es un callejón sin salida evolutivo en este aspecto, irrelevante en todo
-el proceso.</p>
+<p>El tamaño del efecto (<span class="math inline">\(\varepsilon^2\)</span>) para el ancho es <span class="math inline">\(0.086\)</span>. Esto significa que la medida
+transversal del huevo explica apenas el <strong><span class="math inline">\(8.6\%\)</span></strong> de la variación entre
+fallar, quedarse como ninfa o llegar a adulto.</p>
+<p><strong>La Conclusión Causal Multidisciplinaria:</strong> Desde la
+óptica de McElreath, este bajo porcentaje no significa que nuestro
+modelo sea malo, sino que revela la realidad biológica del ecosistema de
+<em>Dyme ramulus</em>. La morfología tridimensional actúa como un
+<strong>peaje ontogenético</strong>: es un filtro biológico estricto que
+decide quién posee el volumen físico suficiente para eclosionar.</p>
+<p>Sin embargo, <strong>una vez pagado ese peaje (una vez que la ninfa
+emerge), el tamaño original de su huevo pierde casi todo su poder
+predictivo</strong>. El destino de la ninfa (si alcanzará o no la
+adultez) pasa a depender en un <span class="math inline">\(&gt;90\%\)</span> de variables ambientales y
+conductuales (microclima, éxito en el forrajeo, depredación), y no del
+diseño anatómico inicial aportado por la madre. La longitud del huevo se
+mantiene como un rasgo anatómico libre de presiones selectivas fuertes
+para la viabilidad temprana.</p>
 <hr />
 <p><strong>Referencias:</strong> * McElreath, R. (2018). <em>Statistical
 rethinking: A Bayesian course with examples in R and Stan</em>. Chapman
