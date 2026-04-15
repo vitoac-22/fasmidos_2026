@@ -101,7 +101,7 @@ p_grupos <- ggplot(df, aes(x = ancho, y = altura, color = estado, shape = estado
 
 figura_regresion <- (p_global | p_grupos) +
   plot_annotation(
-    title = "Figura 2. Análisis Alométrico: Transversalidad y Supervivencia",
+    # title = "Figura 2. Análisis Alométrico: Transversalidad y Supervivencia",
     caption = "Nota: Las bandas representan el error estándar (SE). Textos muestran coeficientes de determinación (R²)."
   ) &
   theme(
@@ -110,4 +110,4 @@ figura_regresion <- (p_global | p_grupos) +
 
 print(figura_regresion)
 
-ggsave("pics/figura_02_regresion_R2.png", figura_regresion, width = 12, height = 6.5, dpi = 300)
+ggsave("pics/figura_02_regresion_R2_sin_titulo.png", figura_regresion, width = 12, height = 6.5, dpi = 300)
