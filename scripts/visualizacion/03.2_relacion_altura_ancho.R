@@ -108,21 +108,21 @@ figura_final <- (p1 | p2 | p3) +
 figura_final |> view_plot()
 
 # Opcional: exportar a archivo
-# ggsave(
-#   "figura4_biometria_viabilidad.png",
-#   plot   = figura_final +
-#     theme(
-#       legend.text  = element_text(size = 12),
-#       legend.title = element_text(size = 13),
-#       legend.key.size = unit(1.2, "lines"),
-#       legend.position = "bottom"
-#     ) +
-#     guides(color = guide_legend(ncol = 2),
-#            shape = guide_legend(ncol = 2)),
-#   width  = 6.5,   # ~16.5 cm
-#   height = 6,     # ~15 cm
-#   dpi    = 300,
-#   bg     = "white",
-#   path   = "pics"
-# )
-# 
+ggsave(
+  "figura4_biometria_viabilidad.png",
+  plot   = figura_final +
+    theme(
+      legend.text  = element_text(size = 12),
+      legend.title = element_text(size = 13),
+      legend.key.size = unit(1.2, "lines"),
+      legend.position = "bottom"
+    ) +
+    guides(color = guide_legend(ncol = 2),
+           shape = guide_legend(ncol = 2)),
+  width  = 6.5,   # ~16.5 cm
+  height = 6,     # ~15 cm
+  dpi    = 300,
+  bg     = "white",
+  path   = "pics"
+)
+
