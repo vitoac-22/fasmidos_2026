@@ -2,7 +2,7 @@
 library(readxl)
 
 # 1. Lectura de datos
-df <- read_excel("data/p_EGGS_EJES.xlsx", sheet = "DATA_MOD_01")
+df <- read_excel("data/raw/p_EGGS_EJES.xlsx", sheet = "DATA_MOD_01")
 
 # 2. Aislamiento de variables
 metricas <- df[, c("altura", "longitud", "ancho")]
