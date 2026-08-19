@@ -5,3 +5,4 @@
 .httr-oauth
 .quarto
 data/
+00_setup.R

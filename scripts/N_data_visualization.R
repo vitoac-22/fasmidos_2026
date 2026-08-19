@@ -22,16 +22,20 @@ df <- df_raw %>%
     estado = factor(estado, levels = c("No eclosionó","Eclosionó","Adulto"))
   )
 
+df |>
+  group_by(estado) |>
+  summarise(n = n(), porcentaje = round((n / nrow(df)) * 100, 2))
+
 # ============================================================
-# 2. CONFIGURACIÓN ESTÉTICA (LA SOLUCIÓN ARQUITECTÓNICA)
+# 2. CONFIGURACIÓN ESTÉTICA
 # ============================================================
-# Separamos las paletas para no tener que hackear la leyenda después
+# Separamos las paletas para relleno como variable
 paleta_relleno <- c("No eclosionó" = "#e07a5f", "Eclosionó" = "#457b9d", "Adulto" = "#81b29a")
 paleta_borde   <- c("No eclosionó" = "#e07a5f", "Eclosionó" = "black",   "Adulto" = "black")
 formas_paper   <- c("No eclosionó" = 4,         "Eclosionó" = 21,        "Adulto" = 24)
 
 # ============================================================
-# 3. FUNCIÓN GENERADORA (Base sólida)
+# 3. FUNCIÓN GENERADORA
 # ============================================================
 crear_cruce <- function(df, x_var, y_var, x_lab, y_lab, mostrar_leyenda = FALSE) {
   p <- ggplot(df, aes(x=.data[[x_var]], y=.data[[y_var]], 
